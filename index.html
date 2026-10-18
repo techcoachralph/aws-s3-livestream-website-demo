@@ -3,37 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AWS S3 Static Website Demo</title>
+  <title>AWS S3 Automated CI/CD Demo</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <header>
     <nav>
-      <a href="index.html" class="logo">S3<span>Demo</span></a>
+      <a href="index.html" class="logo">S3<span>Deploy</span></a>
       <ul class="nav-links">
         <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="about.html">Architecture & OIDC</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
     <div class="card">
-      <h1>🚀 Welcome to the AWS S3 Static Website Demo!</h1>
-      <p>This simple static site is designed to demonstrate how easily you can host websites on <strong>Amazon S3</strong>.</p>
-      <p>During our livestream, we are showing how to:</p>
-      <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
-        <li>Create an Amazon S3 bucket</li>
-        <li>Configure the bucket for <strong>Static website hosting</strong></li>
-        <li>Set up public read permissions using Bucket Policies</li>
-        <li>Upload files and access the live website URL</li>
-      </ul>
-      <a href="about.html" class="btn">Learn More</a>
+      <div class="badge">🚀 CI/CD Automated Deployment</div>
+      <h1>Automated S3 Deployment via GitHub Actions & AWS OIDC</h1>
+      <p>This website is automatically built and deployed to a new <strong>Amazon S3</strong> bucket using <strong>GitHub Actions</strong> and an <strong>AWS OpenID Connect (OIDC) identity provider</strong>.</p>
+      
+      <p>Instead of manually uploading static files or storing risky, long-lived AWS secret access keys in GitHub Secrets, our deployment pipeline uses modern short-lived federated credentials.</p>
+
+      <div class="highlight-box">
+        <h3>How This Deployment Works:</h3>
+        <ol style="margin-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+          <li>Code changes are pushed or merged into the <code>main</code> branch.</li>
+          <li>GitHub Actions requests a short-lived OIDC JSON Web Token (JWT).</li>
+          <li>AWS STS verifies the token against the AWS IAM OIDC identity provider.</li>
+          <li>GitHub Actions assumes an IAM role and syncs all website assets directly to the target S3 bucket.</li>
+        </ol>
+      </div>
+
+      <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="about.html" class="btn">View OIDC Architecture</a>
+        <a href="https://github.com/techcoachralph/aws-s3-livestream-website-demo" target="_blank" class="btn btn-secondary">View GitHub Repo</a>
+      </div>
     </div>
   </main>
 
   <footer>
-    <p>AWS S3 Demo Site &copy; 2026. Built for livestream demo.</p>
+    <p>AWS S3 + GitHub Actions OIDC Demo &copy; 2026. Built for livestream demo.</p>
   </footer>
 </body>
 </html>

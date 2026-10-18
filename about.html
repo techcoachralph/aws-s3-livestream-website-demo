@@ -3,36 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About - AWS S3 Static Website Demo</title>
+  <title>Architecture - AWS S3 + GitHub Actions OIDC Demo</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <header>
     <nav>
-      <a href="index.html" class="logo">S3<span>Demo</span></a>
+      <a href="index.html" class="logo">S3<span>Deploy</span></a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="about.html" class="active">Architecture & OIDC</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
     <div class="card">
-      <h1>About This Demonstration</h1>
-      <p>Hosting a website on Amazon S3 is one of the most cost-effective, reliable, and scalable ways to host client-side web applications.</p>
-      <p>Key highlights of S3 static hosting include:</p>
+      <h1>Deployment Architecture: GitHub Actions & AWS OIDC</h1>
+      <p>In this phase of the lab, we transitioned from manual S3 uploads to an enterprise-grade automated deployment pipeline.</p>
+
+      <h2>Why AWS OIDC with GitHub Actions?</h2>
       <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
-        <li><strong>High Availability:</strong> Built on AWS's durable object storage.</li>
-        <li><strong>Serverless:</strong> No EC2 instances or web servers to maintain or patch.</li>
-        <li><strong>Custom Error Support:</strong> S3 lets you specify a custom error document (like <code>error.html</code>) for 4XX errors.</li>
+        <li><strong>No Long-Lived Secrets:</strong> You do not need to generate or rotate <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code>.</li>
+        <li><strong>Least Privilege Access:</strong> The IAM role is scoped specifically to this repository, branch, and destination S3 bucket.</li>
+        <li><strong>Auditable:</strong> Every deployment request creates CloudTrail events tied to GitHub's OIDC issuer claims.</li>
       </ul>
-      <a href="index.html" class="btn">Back to Home</a>
+
+      <h2>Key Components</h2>
+      <div class="highlight-box">
+        <ul style="margin-left: 1.5rem;">
+          <li><strong>AWS IAM OIDC Identity Provider:</strong> Configured with URL <code>https://token.actions.githubusercontent.com</code> and audience <code>sts.amazonaws.com</code>.</li>
+          <li><strong>IAM Role Trust Policy:</strong> Allows <code>sts:AssumeRoleWithWebIdentity</code> conditioned on <code>repo:techcoachralph/aws-s3-livestream-website-demo:*</code>.</li>
+          <li><strong>GitHub Actions Workflow:</strong> Uses <code>aws-actions/configure-aws-credentials@v4</code> with <code>permissions: id-token: write</code>.</li>
+          <li><strong>Amazon S3 Bucket:</strong> Configured for Static Website Hosting with public read policy or CloudFront Origin Access Control (OAC).</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <a href="index.html" class="btn">Back to Home</a>
+      </div>
     </div>
   </main>
 
   <footer>
-    <p>AWS S3 Demo Site &copy; 2026. Built for livestream demo.</p>
+    <p>AWS S3 + GitHub Actions OIDC Demo &copy; 2026. Built for livestream demo.</p>
   </footer>
 </body>
 </html>
